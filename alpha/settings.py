@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-
+from os.path import abspath, dirname, join, normpath
+from sys import path
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -37,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,7 +58,7 @@ ROOT_URLCONF = 'alpha.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [normpath(join(BASE_DIR, 'templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,9 +79,14 @@ WSGI_APPLICATION = 'alpha.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'beyonic',                      # Or path to database file if using sqlite3.
+            # The following settings are not used with sqlite3:
+            'USER': 'postgres',
+            'PASSWORD': '',
+            'HOST': 'localhost',                      # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
+            'PORT': '5432',                      # Set to empty string for default.
+     }
 }
 
 
@@ -99,4 +107,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+STATICFILES_DIRS=(join(BASE_DIR, 'static'),
+
+                  )
 STATIC_URL = '/static/'
+TWILIO_ACCOUNT_SID = "ACa2b04ae24893f23b11adceada57b869f"
+TWILIO_AUTH_TOKEN = "04c775c76ee411da7ee4f0f2c96612e1"
+TWILIO_PHONE_NUMBER='+4915735984489'
+
+# gmail account
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+SERVER_EMAIL = 'murithialpha@gmail.com'
+EMAIL_HOST_USER = 'murithialpha@gmail.com'
+EMAIL_HOST_PASSWORD = 'murithi123Alpha!'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#
+# DEFAULT_FROM_EMAIL = 'murithialpha@gmail.com'
+
+AUTH_USER_MODEL = 'accounts.Client'
+EMAIL_PORT = 587
+

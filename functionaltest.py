@@ -10,4 +10,4 @@ assert 'pata-pesa money transfer' in browser.title
 
 # She is invited to sign up straight away
 
-# She types
+# She types in her user details
