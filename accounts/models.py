@@ -1,9 +1,47 @@
 import random
 import string
 from django.utils import timezone
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import UserManager
 from django.db import models
+
+
+class ClientManager(BaseUserManager):
+    def create_client(self, first_name, last_name, username, email, is_active, joined, phone_number, email_confirm_key, key_expires, password):
+        if not email:
+            raise ValueError("Users must have an email address")
+
+        user = self.model(
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            email=email,
+            is_active=is_active,
+            joined=joined,
+            phone_number=phone_number,
+            email_confirm_key=email_confirm_key,
+            key_expires=key_expires,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, first_name, last_name, username, email, is_active, joined, phone_number, email_confirm_key, key_expires, password):
+
+        user = self.create_user(email,
+                                last_name=last_name,
+                                username=username,
+                                is_active=is_active,
+                                joined=joined,
+                                phone_number=phone_number,
+                                email_confirm_key=email_confirm_key,
+                                key_expires=key_expires
+                                )
+
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
 
 
 class Client(AbstractBaseUser):
@@ -19,7 +57,7 @@ class Client(AbstractBaseUser):
     key_expires = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
-    objects = UserManager()
+    objects = ClientManager()
     def __unicode__(self):
         return self.email
 
